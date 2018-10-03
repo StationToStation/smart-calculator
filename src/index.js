@@ -1,27 +1,63 @@
 class SmartCalculator {
   constructor(initialValue) {
-    // your implementation
+      this.result = initialValue;
+      this.lastAddend = undefined;
+      this.lastMultiplier = undefined;
+  }
+
+  toString() {
+      return this.result;
   }
 
   add(number) {
-    // your implementation
+      this.result += number;
+      this.lastAddend = number;
+      this.lastMultiplier = undefined;
+      return this;
   }
-  
+
   subtract(number) {
-    // your implementation
+      this.result -= number;
+      this.lastAddend = -number;
+      this.lastMultiplier = undefined;
+      return this;
   }
 
   multiply(number) {
-    // your implementation
+      if (this.lastAddend === undefined)
+          this.result *= number;
+      else {
+          this.result = this.result - this.lastAddend + (this.lastAddend * number);
+          this.lastAddend = this.lastAddend * number;
+      }
+      this.lastMultiplier = number;
+      return this;
   }
 
   devide(number) {
-    // your implementation
+      if (this.lastAddend === undefined)
+          this.result /= number;
+      else {
+          this.result = this.result - this.lastAddend + (this.lastAddend / number);
+          this.lastAddend = this.lastAddend / number;
+      }
+      this.lastMultiplier = 1 / number;
+      return this;
   }
 
   pow(number) {
-    // your implementation
+      if (this.lastMultiplier != undefined) {
+          this.result = this.result / this.lastMultiplier * Math.pow(this.lastMultiplier, number);
+          this.lastMultiplier = Math.pow(this.lastMultiplier, number);
+      } else if (this.lastAddend != undefined) {
+          this.result = this.result - this.lastAddend + Math.pow(this.lastAddend, number);
+          this.lastAddend = Math.pow(this.lastAddend, number);
+      } else {
+          this.result = Math.pow(this.result, number);
+      }
+      return this;
   }
+
 }
 
 module.exports = SmartCalculator;
