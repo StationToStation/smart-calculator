@@ -1,41 +1,56 @@
 class SmartCalculator {
-   constructor(startValue) {
+  constructor(startValue) {
     this.result = startValue;
     this.lastAddend = undefined;
     this.lastMultiplier = undefined;
     this.wasPowed = false;
   }
-   toString() {
-@@ -13,13 +14,15 @@ class SmartCalculator {
+
+  toString() {
+    return this.result;
+  }
+
+  add(number) {
     this.result += number;
     this.lastAddend = number;
     this.lastMultiplier = undefined;
     this.wasPowed = false;
     return this;
   }
-   subtract(number) {
+
+  subtract(number) {
     this.result -= number;
     this.lastAddend = -number;
     this.lastMultiplier = undefined;
     this.wasPowed = false;
     return this;
   }
- @@ -31,6 +34,7 @@ class SmartCalculator {
+
+  multiply(number) {
+    if (this.lastAddend === undefined)
+      this.result *= number;
+    else {
+      this.result = this.result - this.lastAddend + (this.lastAddend * number);
       this.lastAddend = this.lastAddend * number;
     }
     this.lastMultiplier = number;
     this.wasPowed = false;
     return this;
   }
- @@ -42,11 +46,19 @@ class SmartCalculator {
+
+  devide(number) {
+    if (this.lastAddend === undefined)
+      this.result /= number;
+    else {
+      this.result = this.result - this.lastAddend + (this.lastAddend / number);
       this.lastAddend = this.lastAddend / number;
     }
     this.lastMultiplier = 1 / number;
     this.wasPowed = false;
     return this;
   }
-   pow(number) {
-    if (this.lastMultiplier != undefined) {
+
+  pow(number) {
     if (this.wasPowed) {
       this.wasPowed = true;
       return this;
@@ -47,13 +62,18 @@ class SmartCalculator {
       this.result = this.result / this.lastMultiplier * Math.pow(this.lastMultiplier, number);
       this.lastMultiplier = Math.pow(this.lastMultiplier, number);
     } else if (this.lastAddend < 0 & number % 2 == 0) {
-@@ -58,6 +70,7 @@ class SmartCalculator {
+      this.result = this.result - this.lastAddend - Math.pow(this.lastAddend, number);
+      this.lastAddend = -1 * Math.pow(this.lastAddend, number);
+    } else if (this.lastAddend != undefined) {
+      this.result = this.result - this.lastAddend + Math.pow(this.lastAddend, number);
+      this.lastAddend = Math.pow(this.lastAddend, number);
     } else {
       this.result = Math.pow(this.result, number);
     }
     this.wasPowed = true;
     return this;
   }
-  }
- 
- module.exports = SmartCalculator;
+
+}
+
+module.exports = SmartCalculator;
