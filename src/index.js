@@ -3,7 +3,7 @@ class SmartCalculator {
     this.result = startValue;
     this.lastAddend = undefined;
     this.lastMultiplier = undefined;
-    this.wasPowed = false;
+    this.lastPow = undefined;
   }
 
   toString() {
@@ -14,7 +14,7 @@ class SmartCalculator {
     this.result += number;
     this.lastAddend = number;
     this.lastMultiplier = undefined;
-    this.wasPowed = false;
+    this.lastPow = undefined;
     return this;
   }
 
@@ -22,7 +22,7 @@ class SmartCalculator {
     this.result -= number;
     this.lastAddend = -number;
     this.lastMultiplier = undefined;
-    this.wasPowed = false;
+    this.lastPow = undefined;
     return this;
   }
 
@@ -30,11 +30,11 @@ class SmartCalculator {
     if (this.lastAddend === undefined)
       this.result *= number;
     else {
-      this.result = this.result - this.lastAddend + (this.lastAddend * number);
+      this.result += this.lastAddend *( number-1);
       this.lastAddend = this.lastAddend * number;
     }
     this.lastMultiplier = number;
-    this.wasPowed = false;
+    this.lastPow = undefined;
     return this;
   }
 
@@ -42,35 +42,36 @@ class SmartCalculator {
     if (this.lastAddend === undefined)
       this.result /= number;
     else {
-      this.result = this.result - this.lastAddend + (this.lastAddend / number);
+      this.result = this.result- this.lastAddend +this.lastAddend/number;// (1-number) / number;
       this.lastAddend = this.lastAddend / number;
     }
     this.lastMultiplier = 1 / number;
-    this.wasPowed = false;
+    this.lastPow = undefined;
     return this;
   }
 
   pow(number) {
-    if (this.wasPowed) {
-      this.wasPowed = true;
-      return this;
-    }
     if (this.lastMultiplier != undefined & this.lastAddend != undefined) {
-      this.result = this.result - this.lastAddend + this.lastAddend * Math.pow(this.lastMultiplier, number - 1);
+      if (this.lastPow!=undefined) {
+        this.result=this.result - this.lastAddend+this.lastAddend/Math.pow(this.lastMultiplier,this.lastPow)*Math.pow(this.lastMultiplier, Math.pow(this.lastPow,number));
+        this.lastMultiplier = Math.pow(this.lastMultiplier, Math.pow(this.lastPow,number)/this.lastPow);
+        this.lastPow*=number;
+      }
+      this.result += this.lastAddend * (Math.pow(this.lastMultiplier, number - 1)-1);
       this.lastMultiplier = Math.pow(this.lastMultiplier, number);
     } else if (this.lastMultiplier != undefined) {
-      this.result = this.result / this.lastMultiplier * Math.pow(this.lastMultiplier, number);
+      this.result *= Math.pow(this.lastMultiplier, number-1);
       this.lastMultiplier = Math.pow(this.lastMultiplier, number);
     } else if (this.lastAddend < 0 & number % 2 == 0) {
       this.result = this.result - this.lastAddend - Math.pow(this.lastAddend, number);
-      this.lastAddend = -1 * Math.pow(this.lastAddend, number);
+      this.lastAddend = - Math.pow(this.lastAddend, number);
     } else if (this.lastAddend != undefined) {
       this.result = this.result - this.lastAddend + Math.pow(this.lastAddend, number);
       this.lastAddend = Math.pow(this.lastAddend, number);
     } else {
       this.result = Math.pow(this.result, number);
     }
-    this.wasPowed = true;
+    this.lastPow = number;
     return this;
   }
 
